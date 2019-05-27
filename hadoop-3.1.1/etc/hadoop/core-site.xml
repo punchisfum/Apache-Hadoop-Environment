@@ -3,7 +3,7 @@
 <configuration>
     <property>
         <name>hosts</name>
-        <value>devops.bayudwiyansatria.com</value>
+        <value>localhost</value>
     </property>
     <property>
         <name>io.native.lib.available</name>

@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <configuration>
   <property>
+    <name>hosts</name>
+    <value>0.0.0.0</value>
+  </property>
+  <property>
     <name>yarn.resourcemanager.hostname</name>
     <value>0.0.0.0</value>
   </property>
@@ -177,7 +181,7 @@
   </property>
   <property>
     <name>yarn.web-proxy.address</name>
-    <value>devops.bayudwiyansatria.com</value>
+    <value>${hosts}</value>
   </property>
 
   <!-- Additional Configuration -->
