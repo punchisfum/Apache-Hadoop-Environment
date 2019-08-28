@@ -1,10 +1,12 @@
 #!/bin/bash
+
 echo "################################################"
 echo "##  Welcom To Bayu Dwiyan Satria Installation ##"
 echo "################################################"
 
 # User Access
 if [ $(id -u) -eq 0 ]; then
+
     echo "################################"
     echo "##  System Compability Check  ##"
     echo "################################"
@@ -99,6 +101,7 @@ if [ $(id -u) -eq 0 ]; then
     echo "Installing Hadoop $version Successfully";
     echo "User $username";
     echo "Pass $password";
+
 else
     echo "Only root may add a user to the system"
     exit 1
