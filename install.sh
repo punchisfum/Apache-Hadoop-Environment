@@ -13,6 +13,32 @@ if [ $(id -u) -eq 0 ]; then
 
     echo "Please wait! Checking System Compability";
 
+    read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
+
+    if [ -z "$version" ] ; then 
+        echo "Hadoop version is not specified! Installing hadoop with lastest stable version";
+        distribution="stable";
+        version="3.2.0"
+        packages="hadoop-$version";
+    else
+        distribution="hadoop-$version";
+        packages=$distribution;
+    fi
+
+    # Packages Available
+    url=https://www-eu.apache.org/dist/hadoop/common/$distribution/$packages.tar.gz
+    echo "Checking availablility hadoop $version";
+    if curl --output /dev/null --silent --head --fail "$url"; then
+        echo "Hadoop version is available: $url"
+    else
+        echo "Hadoop version isn't available: $url"
+        exit 1;
+    fi
+
+    echo "Hadoop version $version install is in progress, Please keep your computer power on";
+
+    wget https://www-eu.apache.org/dist/hadoop/common/$distribution/$packages.tar.gz -O /tmp/$packages.tar.gz;
+
     # System Operation Information
     if type lsb_release >/dev/null 2>&1 ; then
     os=$(lsb_release -i -s)
@@ -24,7 +50,7 @@ if [ $(id -u) -eq 0 ]; then
 
     os=$(printf '%s\n' "$os" | LC_ALL=C tr '[:upper:]' '[:lower:]')
 
-    read -p "Update Distro (y/n) [ENTER] (y): " update
+    read -p "Update Distro (y/n) [ENTER] (y)(Recommended): " update
     if [ $update == "y" ] ; then
         if [ $os == "ubuntu" ] ; then
             apt-get -y update && apt-get -y upgrade
@@ -39,24 +65,9 @@ if [ $(id -u) -eq 0 ]; then
         yum -y install git && yum -y install wget
     fi
 
-    read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
-
-    if [ -z "$version" ] ; then 
-        echo "Version is not specified! Installing hadoop lastest stable version";
-        distribution="stable";
-        version="3.2.0"
-    else
-        distribution=$version;
-        echo "Version $version installing, Please keep your computer power on";
-    fi
-
     echo "################################"
     echo "## Installing Hadoop Version  ##"
     echo "################################"
-
-    # Packages Available
-    packages=hadoop-$version;
-    wget https://www-eu.apache.org/dist/hadoop/common/$distribution/$packages.tar.gz -O /tmp/$packages.tar.gz;
 
     # Extraction Packages
     tar -xvf /tmp/$packages.tar.gz;
@@ -74,7 +85,7 @@ if [ $(id -u) -eq 0 ]; then
         useradd -m -p $pass $username
         [ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
     fi
-9
+
     usermod -aG $username $password
     chown $username:root -R /usr/local/hadoop
     chmod g+rwx -R /usr/local/hadoop
@@ -104,5 +115,5 @@ if [ $(id -u) -eq 0 ]; then
 
 else
     echo "Only root may add a user to the system"
-    exit 1
+    exit 2;
 fi
