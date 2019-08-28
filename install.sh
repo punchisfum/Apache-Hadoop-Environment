@@ -4,6 +4,10 @@ echo "################################################"
 echo "##  Welcom To Bayu Dwiyan Satria Installation ##"
 echo "################################################"
 
+echo "Use of code or any part of it is strictly prohibited."
+echo "File protected by copyright law and provided under license."
+echo "To Use any part of this code you need to get a writen approval from the code owner: bayudwiyansatria@gmail.com."
+
 # User Access
 if [ $(id -u) -eq 0 ]; then
 
@@ -12,10 +16,9 @@ if [ $(id -u) -eq 0 ]; then
     echo "################################"
 
     echo "Please wait! Checking System Compability";
-
-    read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
-
-    if [ -z "$version" ] ; then 
+    if [ -z "$1" ] ; then
+        read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
+    elif [ -z "$version" ] ; then 
         echo "Hadoop version is not specified! Installing hadoop with lastest stable version";
         distribution="stable";
         version="3.2.0"
