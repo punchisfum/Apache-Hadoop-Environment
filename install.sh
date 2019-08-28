@@ -17,15 +17,19 @@ if [ $(id -u) -eq 0 ]; then
 
     echo "Please wait! Checking System Compability";
     if [ -z "$1" ] ; then
-        read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
-    elif [ -z "$version" ] ; then 
-        echo "Hadoop version is not specified! Installing hadoop with lastest stable version";
-        distribution="stable";
-        version="3.2.0"
-        packages="hadoop-$version";
-    else
-        distribution="hadoop-$version";
+        distribution="hadoop-$1";
         packages=$distribution;
+    else
+        read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
+        if [ -z "$version" ] ; then 
+            echo "Hadoop version is not specified! Installing hadoop with lastest stable version";
+            distribution="stable";
+            version="3.2.0"
+            packages="hadoop-$version";
+        else
+            distribution="hadoop-$version";
+            packages=$distribution;
+        fi
     fi
 
     # Packages Available
