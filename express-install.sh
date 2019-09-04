@@ -44,7 +44,8 @@ if [ $(id -u) -eq 0 ]; then
     fi
 
     # Packages Available
-    url=https://www-eu.apache.org/dist/hadoop/common/$distribution/$packages.tar.gz;
+    mirror=https://www-eu.apache.org/dist/hadoop/common;
+    url=$mirror/$distribution/$packages.tar.gz;
     echo "Checking availablility hadoop $version";
     if curl --output /dev/null --silent --head --fail "$url"; then
         echo "Hadoop version is available: $url";
@@ -55,7 +56,7 @@ if [ $(id -u) -eq 0 ]; then
 
     echo "Hadoop version $version install is in progress, Please keep your computer power on";
 
-    wget https://www-eu.apache.org/dist/hadoop/common/$distribution/$packages.tar.gz -O /tmp/$packages.tar.gz;
+    wget $mirror/$distribution/$packages.tar.gz -O /tmp/$packages.tar.gz;
 
     # System Operation Information
     if type lsb_release >/dev/null 2>&1 ; then
