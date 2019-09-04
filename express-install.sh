@@ -115,6 +115,17 @@ if [ $(id -u) -eq 0 ]; then
         wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
     done
 
+    java=$(echo "$JAVA_HOME");
+    if [ -z "$java" ] ; then
+        if [ $os == "ubuntu" ] ; then
+            apt-get -y install git && apt-get -y install wget;
+        else 
+            yum install java-1.8.0-openjdk;
+            java=$(dirname $(readlink -f $(which java))|sed 's^jre/bin^^');
+            echo -e "export JAVA_HOME="$java"" >> /home/hadoop/.bash_profile;
+        fi
+    fi
+
     echo "############################################";
     echo "## Thank You For Using Bayu Dwiyan Satria ##";
     echo "############################################";
