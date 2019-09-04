@@ -123,29 +123,29 @@ if [ $(id -u) -eq 0 ]; then
         else 
             yum install java-1.8.0-openjdk;
             java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
-            echo -e "export JAVA_HOME="$java"" >> /home/$username/.bash_profile;
-            echo -e "# Apache Hadoop Environment" >> /home/$username/.bash_profile;
-            echo -e "export HADOOP_HOME=$HADOOP_HOME" >> /home/$username/.bash_profile;
-            echo -e "export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop" >> /home/$username/.bash_profile;
-            echo -e "export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native" >> /home/$username/.bash_profile;
-            echo -e "export HADOOP_INSTALL=${HADOOP_HOME}" >> /home/$username/.bash_profile;
-            echo -e "export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin" >> /home/$username/.bash_profile;
             env=$(echo "$PATH");
-            newenv="$env:"${HADOOP_HOME}"/bin:"${HADOOP_HOME}"/sbin";
-            echo -e "export $newenv" >> /home/$username/.bash_profile;
+            echo -e 'export LOCAL_PATH="'$env'"' >> /home/$username/.bash_profile;
+            echo -e 'export JAVA_HOME="'$java'"' >> /home/$username/.bash_profile;
+            echo -e '# Apache Hadoop Environment' >> /home/$username/.bash_profile;
+            echo -e 'export HADOOP_HOME="'$HADOOP_HOME'"' >> /home/$username/.bash_profile;
+            echo -e 'export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop' >> /home/$username/.bash_profile;
+            echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> /home/$username/.bash_profile;
+            echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> /home/$username/.bash_profile;
+            echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> /home/$username/.bash_profile;
+            echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> /home/$username/.bash_profile;
         fi
     else
         java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
-        echo -e "export JAVA_HOME="$java"" >> /home/$username/.bash_profile;
-        echo -e "# Apache Hadoop Environment" >> /home/$username/.bash_profile;
-        echo -e "export HADOOP_HOME=$HADOOP_HOME" >> /home/$username/.bash_profile;
-        echo -e "export HADOOP_CONF_DIR="${HADOOP_HOME}"/etc/hadoop" >> /home/$username/.bash_profile;
-        echo -e "export HADOOP_COMMON_LIB_NATIVE_DIR="${HADOOP_HOME}"/lib/native" >> /home/$username/.bash_profile;
-        echo -e "export HADOOP_INSTALL="${HADOOP_HOME}"" >> /home/$username/.bash_profile;
-        echo -e "export HADOOP="${HADOOP_HOME}"/bin:"${HADOOP_HOME}"/sbin" >> /home/$username/.bash_profile;
         env=$(echo "$PATH");
-        newenv="$env:"${HADOOP_HOME}"/bin:"${HADOOP_HOME}"/sbin";
-        echo -e "export $newenv" >> /home/$username/.bash_profile;
+        echo -e 'export LOCAL_PATH="'$env'"' >> /home/$username/.bash_profile;
+        echo -e 'export JAVA_HOME="'$java'"' >> /home/$username/.bash_profile;
+        echo -e '# Apache Hadoop Environment' >> /home/$username/.bash_profile;
+        echo -e 'export HADOOP_HOME="'$HADOOP_HOME'"' >> /home/$username/.bash_profile;
+        echo -e 'export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop' >> /home/$username/.bash_profile;
+        echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> /home/$username/.bash_profile;
+        echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> /home/$username/.bash_profile;
+        echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> /home/$username/.bash_profile;
+        echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> /home/$username/.bash_profile;
     fi
 
     echo "############################################";
