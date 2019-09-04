@@ -132,7 +132,7 @@ if [ $(id -u) -eq 0 ]; then
             echo -e "export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin" >> /home/$username/.bash_profile;
             env=$(echo "$PATH");
             newenv="$env:"${HADOOP_HOME}"/bin:"${HADOOP_HOME}"/sbin";
-            echo -e "export $newenv";
+            echo -e "export $newenv" >> /home/$username/.bash_profile;
         fi
     else
         java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
@@ -145,7 +145,7 @@ if [ $(id -u) -eq 0 ]; then
         echo -e "export HADOOP="${HADOOP_HOME}"/bin:"${HADOOP_HOME}"/sbin" >> /home/$username/.bash_profile;
         env=$(echo "$PATH");
         newenv="$env:"${HADOOP_HOME}"/bin:"${HADOOP_HOME}"/sbin";
-        echo -e "export $newenv";
+        echo -e "export $newenv" >> /home/$username/.bash_profile;
     fi
 
     echo "############################################";
