@@ -38,16 +38,9 @@ if [ $(id -u) -eq 0 ]; then
         distribution="hadoop-$argv";
         packages=$distribution;
     else
-        read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
-        if [ -z "$version" ] ; then 
-            echo "Hadoop version is not specified! Installing hadoop with lastest stable version";
-            distribution="stable";
-            version="3.2.0";
-            packages="hadoop-$version";
-        else
-            distribution="hadoop-$version";
-            packages=$distribution;
-        fi
+        distribution="stable";
+        version="3.2.0";
+        packages="hadoop-$version";
     fi
 
     # Packages Available
@@ -75,13 +68,10 @@ if [ $(id -u) -eq 0 ]; then
 
     os=$(printf '%s\n' "$os" | LC_ALL=C tr '[:upper:]' '[:lower:]');
 
-    read -p "Update Distro (y/n) [ENTER] (y)(Recommended): " update;
-    if [ -z "$update" == "y" ] ; then 
-        if [ $os == "ubuntu" ] ; then
-            apt-get -y update && apt-get -y upgrade;
-        else 
-            yum -y update && yum -y upgrade;
-        fi
+    if [ $os == "ubuntu" ] ; then
+        apt-get -y update && apt-get -y upgrade;
+    else 
+        yum -y update && yum -y upgrade;
     fi
 
     if [ $os == "ubuntu" ] ; then
@@ -98,8 +88,8 @@ if [ $(id -u) -eq 0 ]; then
     mv $packages /usr/local/hadoop;
 
     # User Generator
-    read -p "Enter username : " username;
-    read -s -p "Enter password : " password;
+    username="hadoop";
+    password="hadoop";
     egrep "^$username" /etc/passwd >/dev/null;
     if [ $? -eq 0 ]; then
         echo "$username exists!"
@@ -118,14 +108,11 @@ if [ $(id -u) -eq 0 ]; then
     echo "################################";
     echo "";
 
-    read -p "Using default configuration (y/n) [ENTER] (y): " conf;
-    if [ -z "$conf" == "y" ] ; then 
         # Configuration Variable
-        configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml);
-        for xml in "${configuration[@]}" ; do 
-            wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
-        done
-    fi
+    configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml);
+    for xml in "${configuration[@]}" ; do 
+        wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
+    done
 
     echo "############################################";
     echo "## Thank You For Using Bayu Dwiyan Satria ##";
