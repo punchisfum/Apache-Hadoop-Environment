@@ -153,7 +153,8 @@ if [ $(id -u) -eq 0 ]; then
     for xml in "${configuration[@]}" ; do 
         wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
         rm $HADOOP_HOME/etc/hadoop/$xml;
-        cp /tmp/$xml $HADOOP_HOME/etc/hadoop;
+        chmod 674 /tmp/$xml;
+        mv /tmp/$xml $HADOOP_HOME/etc/hadoop;
     done
 
     echo "";
@@ -165,7 +166,7 @@ if [ $(id -u) -eq 0 ]; then
     echo "Checking Java virtual machine is running on your machine";
     profile="/etc/profile.d/bayudwiyansatria.sh";
     env=$(echo "$PATH");
-    if [ -e "$profile"] ; then
+    if [ -e "$profile" ] ; then
         echo "Environment already setup";
     else
         touch $profile;

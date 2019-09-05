@@ -176,7 +176,7 @@ if [ $(id -u) -eq 0 ]; then
             echo "";
         fi
     fi
-    
+
     mkdir -p $HADOOP_HOME/logs;
     mkdir -p $HADOOP_HOME/works;
     chown $username:root -R $HADOOP_HOME;
@@ -188,6 +188,14 @@ if [ $(id -u) -eq 0 ]; then
     echo "################################################";
     echo "";
 
+    # Network Configuration
+
+    interface=$(ip route | awk '/^default/ { print $5 }');
+    ipaddr=$(ip route | awk '/^default/ { print $3 }');
+    subnet=$(ip addr show "$interface" | grep "inet" | awk -F'[: ]+' '{ print $3 }' | head -1);
+    network=$(ipcalc -n "$subnet" | cut -f2 -d= );
+    prefix=$(ipcalc -p "$subnet" | cut -f2 -d= );
+
     read -p "Using default configuration (y/n) [ENTER] (y): " conf;
     if [ -z "$conf" == "y" ] ; then 
         # Configuration Variable
@@ -195,9 +203,12 @@ if [ $(id -u) -eq 0 ]; then
         for xml in "${configuration[@]}" ; do 
             wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
             rm $HADOOP_HOME/etc/hadoop/$xml;
-            cp /tmp/$xml $HADOOP_HOME/etc/hadoop;
+            chmod 674 /tmp/$xml;
+            mv /tmp/$xml $HADOOP_HOME/etc/hadoop;
         done
     fi
+    
+    echo -e "$ipaddr" >> $HADOOP_HOME/etc/hadoop/workers;
 
     echo "";
     echo "################################################";
@@ -208,7 +219,7 @@ if [ $(id -u) -eq 0 ]; then
     echo "Checking Java virtual machine is running on your machine";
     profile="/etc/profile.d/bayudwiyansatria.sh";
     env=$(echo "$PATH");
-    if [ -e "$profile"] ; then
+    if [ -e "$profile" ] ; then
         echo "Environment already setup";
     else
         touch $profile;
