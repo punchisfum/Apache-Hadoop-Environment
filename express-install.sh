@@ -157,6 +157,17 @@ if [ $(id -u) -eq 0 ]; then
         mv /tmp/$xml $HADOOP_HOME/etc/hadoop;
     done
 
+    # Network Configuration
+
+    interface=$(ip route | awk '/^default/ { print $5 }');
+    ipaddr=$(ip route | awk '/^default/ { print $3 }');
+    subnet=$(ip addr show "$interface" | grep "inet" | awk -F'[: ]+' '{ print $3 }' | head -1);
+    network=$(ipcalc -n "$subnet" | cut -f2 -d= );
+    prefix=$(ipcalc -p "$subnet" | cut -f2 -d= );
+    hostname=$(echo "$HOSTNAME");
+    
+    echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+
     echo "";
     echo "################################################";
     echo "##             Java Virtual Machine           ##";

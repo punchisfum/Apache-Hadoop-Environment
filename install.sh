@@ -188,14 +188,6 @@ if [ $(id -u) -eq 0 ]; then
     echo "################################################";
     echo "";
 
-    # Network Configuration
-
-    interface=$(ip route | awk '/^default/ { print $5 }');
-    ipaddr=$(ip route | awk '/^default/ { print $3 }');
-    subnet=$(ip addr show "$interface" | grep "inet" | awk -F'[: ]+' '{ print $3 }' | head -1);
-    network=$(ipcalc -n "$subnet" | cut -f2 -d= );
-    prefix=$(ipcalc -p "$subnet" | cut -f2 -d= );
-
     read -p "Using default configuration (y/n) [ENTER] (y): " conf;
     if [ -z "$conf" == "y" ] ; then 
         # Configuration Variable
@@ -208,7 +200,16 @@ if [ $(id -u) -eq 0 ]; then
         done
     fi
     
-    echo -e "$ipaddr" >> $HADOOP_HOME/etc/hadoop/workers;
+    # Network Configuration
+
+    interface=$(ip route | awk '/^default/ { print $5 }');
+    ipaddr=$(ip route | awk '/^default/ { print $3 }');
+    subnet=$(ip addr show "$interface" | grep "inet" | awk -F'[: ]+' '{ print $3 }' | head -1);
+    network=$(ipcalc -n "$subnet" | cut -f2 -d= );
+    prefix=$(ipcalc -p "$subnet" | cut -f2 -d= );
+    hostname=$(echo "$HOSTNAME");
+    
+    echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
 
     echo "";
     echo "################################################";
