@@ -227,7 +227,12 @@ if [ $(id -u) -eq 0 ]; then
             echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> $profile;
             echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> $profile;
             echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> $profile;
-            echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
+            spark=$(echo "$SPARK");
+            if [ -z "$SPARK"] ; then
+                echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
+            else
+                echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}:${SPARK}' >> $profile;
+            fi
         fi
     else
         java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
@@ -238,7 +243,12 @@ if [ $(id -u) -eq 0 ]; then
         echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> $profile;
         echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> $profile;
         echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> $profile;
-        echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
+        spark=$(echo "$SPARK");
+        if [ -z "$SPARK"] ; then
+            echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
+        else
+            echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}:${SPARK}' >> $profile;
+        fi
     fi
 
     echo "Successfully Checking";
