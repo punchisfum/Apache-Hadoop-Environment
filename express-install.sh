@@ -257,7 +257,20 @@ if [ $(id -u) -eq 0 ]; then
     sudo -H -u $username bash -c 'cat /home/'$username'/.ssh/id_rsa.pub >> /home/'$username'/.ssh/authorized_keys';
     chown -R $username:$username "/home/$username/.ssh/*";
     sudo -H -u $username bash -c 'chmod 600 /home/'$username'/.ssh/authorized_keys';
+
+    echo "";
+    echo "################################################";
+    echo "##             Hadoop Initialize              ##";
+    echo "################################################";
+    echo "";
+
+    echo "Formating NameNode";
+    echo "";
     
+    sudo -H -u $username bash -c 'hadoop namenode -format';
+
+    echo "Initialize Complete";
+
     echo "";
     echo "############################################";
     echo "## Thank You For Using Bayu Dwiyan Satria ##";
