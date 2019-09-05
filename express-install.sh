@@ -185,41 +185,31 @@ if [ $(id -u) -eq 0 ]; then
     fi
 
     java=$(echo "$JAVA_HOME");
+
     if [ -z "$java" ] ; then
-        if [ $os == "ubuntu" ] ; then
-            apt-get -y install git && apt-get -y install wget;
+        if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
+            apt-get -y install openjdk-8-jdk;
+        elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ]; then
+            yum -y install java-1.8.0-openjdk;  
         else 
-            yum install java-1.8.0-openjdk;
-            java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
-            echo -e 'export JAVA_HOME="'$java'"' >> $profile;
-            echo -e '# Apache Hadoop Environment' >> $profile;
-            echo -e 'export HADOOP_HOME="'$HADOOP_HOME'"' >> $profile;
-            echo -e 'export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop' >> $profile;
-            echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> $profile;
-            echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> $profile;
-            echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> $profile;
-            spark=$(echo "$SPARK");
-            if [ -z "$SPARK"] ; then
-                echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
-            else
-                echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}:${SPARK}' >> $profile;
-            fi
+            exit 1;  
         fi
+    fi
+
+    java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
+    echo -e 'export JAVA_HOME="'$java'"' >> $profile;
+    echo -e '# Apache Hadoop Environment' >> $profile;
+    echo -e 'export HADOOP_HOME="'$HADOOP_HOME'"' >> $profile;
+    echo -e 'export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop' >> $profile;
+    echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> $profile;
+    echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> $profile;
+    echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> $profile;
+    
+    spark=$(echo "$SPARK");
+    if [ -z "$SPARK"] ; then
+        echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
     else
-        java=$(dirname $(readlink -f $(which java))|sed 's^/bin^^');
-        echo -e 'export JAVA_HOME="'$java'"' >> $profile;
-        echo -e '# Apache Hadoop Environment' >> $profile;
-        echo -e 'export HADOOP_HOME="'$HADOOP_HOME'"' >> $profile;
-        echo -e 'export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop' >> $profile;
-        echo -e 'export HADOOP_COMMON_LIB_NATIVE_DIR=${HADOOP_HOME}/lib/native' >> $profile;
-        echo -e 'export HADOOP_INSTALL=${HADOOP_HOME}' >> $profile;
-        echo -e 'export HADOOP=${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin' >> $profile;
-        spark=$(echo "$SPARK");
-        if [ -z "$SPARK"] ; then
-            echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}' >> $profile;
-        else
-            echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}:${SPARK}' >> $profile;
-        fi
+        echo -e 'export PATH=${LOCAL_PATH}:${HADOOP}:${SPARK}' >> $profile;
     fi
 
     echo "Successfully Checking";
