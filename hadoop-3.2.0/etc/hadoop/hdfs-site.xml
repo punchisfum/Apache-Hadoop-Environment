@@ -8,7 +8,7 @@
   
   <property>
 	  <name>hdfsbasedir</name>
-	  <value>/media/DEVOPS/big-data</value>
+	  <value>/usr/local/hadoop/works</value>
   </property>
 
   <property>

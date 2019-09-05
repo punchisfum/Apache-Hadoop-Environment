@@ -134,6 +134,8 @@ if [ $(id -u) -eq 0 ]; then
         echo "";
     fi
 
+    mkdir -p $HADOOP_HOME/logs;
+    mkdir -p $HADOOP_HOME/works;
     chown $username:root -R $HADOOP_HOME;
     chmod g+rwx -R $HADOOP_HOME;
 
