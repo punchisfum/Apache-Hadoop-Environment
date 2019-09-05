@@ -177,16 +177,16 @@ if [ $(id -u) -eq 0 ]; then
         fi
     fi
 
-    mkdir -p $HADOOP_HOME/logs;
-    mkdir -p $HADOOP_HOME/works;
-    chown $username:root -R $HADOOP_HOME;
-    chmod g+rwx -R $HADOOP_HOME;
-
     echo "";
     echo "################################################";
     echo "##             Hadoop Configuration           ##";
     echo "################################################";
     echo "";
+
+    echo "Generate configuration file";
+
+    mkdir -p $HADOOP_HOME/logs;
+    mkdir -p $HADOOP_HOME/works;
 
     read -p "Using default configuration (y/n) [ENTER] (y): " conf;
     if [ -z "$conf" == "y" ] ; then 
@@ -200,6 +200,7 @@ if [ $(id -u) -eq 0 ]; then
         done
     fi
     
+
     # Network Configuration
 
     interface=$(ip route | awk '/^default/ { print $5 }');
@@ -210,6 +211,9 @@ if [ $(id -u) -eq 0 ]; then
     hostname=$(echo "$HOSTNAME");
     
     echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+
+    chown $username:$username -R $HADOOP_HOME;
+    chmod g+rwx -R $HADOOP_HOME;
 
     echo "";
     echo "################################################";

@@ -134,12 +134,6 @@ if [ $(id -u) -eq 0 ]; then
         echo "";
     fi
 
-    mkdir -p $HADOOP_HOME/logs;
-    mkdir -p $HADOOP_HOME/works;
-    chown $username:root -R $HADOOP_HOME;
-    chmod g+rwx -R $HADOOP_HOME;
-
-
     echo "";
     echo "################################################";
     echo "##             Hadoop Configuration           ##";
@@ -147,6 +141,9 @@ if [ $(id -u) -eq 0 ]; then
     echo "";
 
     echo "Generate configuration file";
+
+    mkdir -p $HADOOP_HOME/logs;
+    mkdir -p $HADOOP_HOME/works;
 
     # Configuration Variable
     configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
@@ -167,6 +164,9 @@ if [ $(id -u) -eq 0 ]; then
     hostname=$(echo "$HOSTNAME");
     
     echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+
+    chown $username:$username -R $HADOOP_HOME;
+    chmod g+rwx -R $HADOOP_HOME;
 
     echo "";
     echo "################################################";
