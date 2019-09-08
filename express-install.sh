@@ -123,8 +123,18 @@ if [ $(id -u) -eq 0 ]; then
     mv $packages $HADOOP_HOME;
 
     # User Generator
-    username="hadoop";
-    password="hadoop";
+    if [ "$3" ] ; then
+        username="$3";
+    else
+        username="hadoop";
+    fi
+
+    if [ "$4" ] ; then
+        password="$4";
+    else
+        password="hadoop";
+    fi
+
     egrep "^$username" /etc/passwd >/dev/null;
     if [ $? -eq 0 ]; then
         echo "$username exists!"
