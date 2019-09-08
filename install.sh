@@ -327,6 +327,7 @@ if [ $(id -u) -eq 0 ]; then
                 ssh $worker "./express-install.sh $version http://bdev.bayudwiyansatria.com/dist/hadoop";
                 sudo -i -u $username bash -c 'ssh-copy-id -i /home/'$username'/id_rsa.pub '$worker'';
                 ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
+                ssh $worker "sudo -i -u $username bash -c 'hadoop namenode -format'";
                 read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
                 workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
             done
