@@ -74,11 +74,9 @@ if [ $(id -u) -eq 0 ]; then
         echo "";
     fi
 
-    argv="$1";
-    echo $argv;
-    if [ "$argv" ] ; then
-        distribution="hadoop-$argv";
-        packages=$distribution;
+    if [ "$1" ] ; then
+        distribution="stable";
+        packages="hadoop-$1";
     else
         distribution="stable";
         version="3.2.0";
