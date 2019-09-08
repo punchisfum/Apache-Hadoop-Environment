@@ -77,11 +77,9 @@ if [ $(id -u) -eq 0 ]; then
         echo "";
     fi
 
-    argv="$1";
-    echo $argv;
-    if [ "$argv" ] ; then
-        distribution="hadoop-$argv";
-        packages=$distribution;
+    if [ "$1" ] ; then
+        distribution="stable";
+        packages="hadoop-$1";
     else
         read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
         if [ -z "$version" ] ; then 
@@ -193,19 +191,15 @@ if [ $(id -u) -eq 0 ]; then
     mkdir -p $HADOOP_HOME/logs;
     mkdir -p $HADOOP_HOME/works;
 
-    read -p "Using default configuration (y/n) [ENTER] (y): " conf;
-    if [ -z "$conf" == "y" ] ; then 
-        # Configuration Variable
-        configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
-        for xml in "${configuration[@]}" ; do 
-            wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
-            rm $HADOOP_HOME/etc/hadoop/$xml;
-            chmod 674 /tmp/$xml;
-            mv /tmp/$xml $HADOOP_HOME/etc/hadoop;
-        done
-    fi
+    # Configuration Variable
+    configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
+    for xml in "${configuration[@]}" ; do 
+        wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/$packages/etc/hadoop/$xml -O /tmp/$xml;
+        rm $HADOOP_HOME/etc/hadoop/$xml;
+        chmod 674 /tmp/$xml;
+        mv /tmp/$xml $HADOOP_HOME/etc/hadoop;
+    done
     
-
     # Network Configuration
 
     interface=$(ip route | awk '/^default/ { print $5 }');
@@ -310,7 +304,7 @@ if [ $(id -u) -eq 0 ]; then
     echo "Formating NameNode";
     echo "";
     
-    sudo -H -u $username bash -c 'hadoop namenode -format';
+    sudo -i -u $username bash -c 'hadoop namenode -format';
 
     echo "Initialize Complete";
 
