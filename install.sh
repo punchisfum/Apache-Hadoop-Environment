@@ -328,7 +328,7 @@ if [ $(id -u) -eq 0 ]; then
             while [ "$workeraccept" == "y" ] ; do 
                 read -p "Please enter worker IP Address [ENTER] " worker;
                 echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
-                ssh-copy-id -i /home/$username/id_rsa.pub $worker;
+                sudo -H -u $username bash -c 'ssh-copy-id -i /home/'$username'/id_rsa.pub '$worker'';
                 ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
                 ssh $worker "chmod 777 express-install.sh";
                 ssh $worker "./express-install.sh $version http://bdev.bayudwiyansatria.com/dist/hadoop";
