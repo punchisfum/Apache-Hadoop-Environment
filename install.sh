@@ -101,7 +101,12 @@ if [ $(id -u) -eq 0 ]; then
     echo "";
 
     # Packages Available
-    mirror=https://www-eu.apache.org/dist/hadoop/common;
+    if [ -n $2 ] ; then
+        mirror=https://www-eu.apache.org/dist/hadoop/common;
+    else
+        mirror=$2;
+    fi
+    
     url=$mirror/$distribution/$packages.tar.gz;
     echo "Checking availablility hadoop $version";
     if curl --output /dev/null --silent --head --fail "$url"; then
@@ -308,6 +313,34 @@ if [ $(id -u) -eq 0 ]; then
     sudo -H -u $username bash -c 'hadoop namenode -format';
 
     echo "Initialize Complete";
+
+    echo "";
+    echo "############################################";
+    echo "##        Adding Worker Nodes             ##";
+    echo "############################################";
+    echo "";
+
+    read -p "Do you want to setup worker? (y/N) [ENTER] (n) " workeraccept;
+    workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+
+    if [ -n "$workeraccept" ] ; then
+        if [ "$workeraccept" == "y" ] ; then
+            while [ "$workeraccept" == "y" ] ; do 
+                read -p "Please enter worker IP Address [ENTER] " worker;
+                echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
+                ssh-copy-id -i /home/$username/id_rsa.pub $worker;
+                ssh $worker ;
+                ssh $worker "useradd -m -p $pass $username"
+                ssh $worker "usermod -aG $username $password";
+                ssh $worker "chown $username:$username -R $HADOOP_HOME";
+                ssh $worker "chmod g+rwx -R $HADOOP_HOME";
+                read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
+                workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
+            done
+        fi
+    fi
+
+    echo "Worker added";
 
     echo "";
     echo "############################################";
