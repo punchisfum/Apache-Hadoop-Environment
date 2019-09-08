@@ -298,7 +298,7 @@ if [ $(id -u) -eq 0 ]; then
     fi
     
     sudo -H -u $username bash -c 'cat /home/'$username'/.ssh/id_rsa.pub >> /home/'$username'/.ssh/authorized_keys';
-    chown -R $username:$username "/home/$username/.ssh/*";
+    chown -R $username:$username "/home/$username/.ssh/";
     sudo -H -u $username bash -c 'chmod 600 /home/'$username'/.ssh/authorized_keys';
 
     echo "";
@@ -329,7 +329,7 @@ if [ $(id -u) -eq 0 ]; then
                 read -p "Please enter worker IP Address [ENTER] " worker;
                 echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
                 ssh-copy-id -i /home/$username/id_rsa.pub $worker;
-                ssh $worker "wget https://github.com/bayudwiyansatria/Apache-Hadoop-Environment/blob/master/express-install.sh";
+                ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
                 ssh $worker "chmod 777 express-install.sh";
                 ssh $worker "./express-install.sh $version http://bdev.bayudwiyansatria.com/dist/hadoop";
                 ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
