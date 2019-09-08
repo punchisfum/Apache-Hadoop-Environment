@@ -329,11 +329,10 @@ if [ $(id -u) -eq 0 ]; then
                 read -p "Please enter worker IP Address [ENTER] " worker;
                 echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
                 ssh-copy-id -i /home/$username/id_rsa.pub $worker;
-                ssh $worker ;
-                ssh $worker "useradd -m -p $pass $username"
-                ssh $worker "usermod -aG $username $password";
-                ssh $worker "chown $username:$username -R $HADOOP_HOME";
-                ssh $worker "chmod g+rwx -R $HADOOP_HOME";
+                ssh $worker "wget https://github.com/bayudwiyansatria/Apache-Hadoop-Environment/blob/master/express-install.sh";
+                ssh $worker "chmod 777 express-install.sh";
+                ssh $worker "./express-install.sh $version http://bdev.bayudwiyansatria.com/dist/hadoop";
+                ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
                 read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
                 workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
             done
