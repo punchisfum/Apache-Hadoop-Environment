@@ -101,12 +101,12 @@ if [ $(id -u) -eq 0 ]; then
     echo "";
 
     # Packages Available
-    if [ -n $2 ] ; then
-        mirror=https://www-eu.apache.org/dist/hadoop/common;
+    if [ "$2" ] ; then
+        mirror="$2";
     else
-        mirror=$2;
+        mirror=https://www-eu.apache.org/dist/hadoop/common;
     fi
-    
+
     url=$mirror/$distribution/$packages.tar.gz;
     echo "Checking availablility hadoop $version";
     if curl --output /dev/null --silent --head --fail "$url"; then
