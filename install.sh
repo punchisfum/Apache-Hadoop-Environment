@@ -322,9 +322,31 @@ if [ $(id -u) -eq 0 ]; then
             while [ "$workeraccept" == "y" ] ; do 
                 read -p "Please enter worker IP Address [ENTER] " worker;
                 echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
+                if [[ -f "~/.ssh/id_rsa" && -f "~/.ssh/id_rsa.pub" ]]; then
+                    echo "SSH already setup";
+                    echo "";
+                else
+                    echo "SSH setup";
+                    echo "";
+                    ssh-keygen;
+                    echo "Generate SSH Success";
+                fi
+
+                if [ -e "~/.ssh/authorized_keys" ] ; then
+                    echo "Authorization already setup";
+                    echo "";
+                else
+                    echo "Configuration authentication";
+                    echo "";
+                    touch ~/.ssh/authorized_keys;
+                    echo "Authentication Compelete";
+                    echo "";
+                fi
+                ssh-copy-id -i ~/id_rsa.pub "$worker"
+            
                 ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
                 ssh $worker "chmod 777 express-install.sh";
-                ssh $worker "./express-install.sh $version http://bdev.bayudwiyansatria.com/dist/hadoop";
+                ssh $worker "./express-install.sh $version http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password";
                 sudo -i -u $username bash -c 'ssh-copy-id -i /home/'$username'/id_rsa.pub '$worker'';
                 ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
                 ssh $worker "sudo -i -u $username bash -c 'hadoop namenode -format'";
