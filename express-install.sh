@@ -75,8 +75,9 @@ if [ $(id -u) -eq 0 ]; then
     fi
 
     if [ "$1" ] ; then
+        version=$1;
         distribution="stable";
-        packages="hadoop-$1";
+        packages="hadoop-$version";
     else
         distribution="stable";
         version="3.2.0";
@@ -259,7 +260,7 @@ if [ $(id -u) -eq 0 ]; then
     fi
     
     sudo -H -u $username bash -c 'cat /home/'$username'/.ssh/id_rsa.pub >> /home/'$username'/.ssh/authorized_keys';
-    chown -R $username:$username "/home/$username/.ssh/*";
+    chown -R $username:$username "/home/$username/.ssh/";
     sudo -H -u $username bash -c 'chmod 600 /home/'$username'/.ssh/authorized_keys';
 
     echo "";
