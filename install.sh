@@ -350,7 +350,7 @@ if [ $(id -u) -eq 0 ]; then
                 ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
                 ssh $worker "chmod 777 express-install.sh";
                 ssh $worker "./express-install.sh" $version "http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password";
-                sudo -i -u $username bash -c "scp /home/$username/.ssh/authorized_keys /home/$username/.ssh/id_rsa /home/$username/.ssh/id_rsa.pub $username@$worker:/home/$username/.ssh/";
+                scp /home/$username/.ssh/authorized_keys /home/$username/.ssh/id_rsa /home/$username/.ssh/id_rsa.pub $username@$worker:/home/$username/.ssh/
                 ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
                 read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
                 workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
