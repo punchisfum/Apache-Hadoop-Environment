@@ -195,6 +195,7 @@ if [ $(id -u) -eq 0 ]; then
     mkdir -p $HADOOP_HOME/logs;
     mkdir -p $HADOOP_HOME/works;
 
+    
     # Configuration Variable
     configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
     for xml in "${configuration[@]}" ; do 
@@ -213,9 +214,7 @@ if [ $(id -u) -eq 0 ]; then
     network=$(ipcalc -n "$subnet" | cut -f2 -d= );
     prefix=$(ipcalc -p "$subnet" | cut -f2 -d= );
     hostname=$(echo "$HOSTNAME");
-    
-    read -p "Is this the Master Node?? (y/N) [ENTER] (n): "  master;
-    master=$(printf '%s\n' "$master" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+
     if [ -n "$master" ] ; then
         if [ "$master" == "y" ] ; then
             read -p "Do you want set this host as a worker to?? (y/N) [ENTER] (y): "  work;
@@ -238,6 +237,20 @@ if [ $(id -u) -eq 0 ]; then
     else
         echo "Worker only serve";
         echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+    fi
+
+    if [ "$master" == "n" ] ; then
+        read -p "Do you want set this host as a worker to?? (y/N) [ENTER] (y): "  masterhost;
+        masterhost=$(printf '%s\n' "$masterhost" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+        configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
+        for xml in "${configuration[@]}" ; do
+            sed -i "s/localhost/$masterhost/g" $HADOOP_HOME/etc/hadoop/$xml;
+        done
+    else
+        configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
+        for xml in "${configuration[@]}" ; do
+            sed -i "s/localhost/$ipaddr/g" $HADOOP_HOME/etc/hadoop/$xml;
+        done
     fi
 
     chown $username:$username -R $HADOOP_HOME;
@@ -402,56 +415,60 @@ if [ $(id -u) -eq 0 ]; then
     else
         exit 1;
     fi
+    
+    if [ "$master" == "n" ] ; then
+        echo "Your worker already setup";
+    else
+        echo "";
+        echo "############################################";
+        echo "##        Adding Worker Nodes             ##";
+        echo "############################################";
+        echo "";
 
-    echo "";
-    echo "############################################";
-    echo "##        Adding Worker Nodes             ##";
-    echo "############################################";
-    echo "";
+        read -p "Do you want to setup worker? (y/N) [ENTER] (n) " workeraccept;
+        workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
 
-    read -p "Do you want to setup worker? (y/N) [ENTER] (n) " workeraccept;
-    workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+        if [ -n "$workeraccept" ] ; then
+            if [ "$workeraccept" == "y" ] ; then
+                while [ "$workeraccept" == "y" ] ; do 
+                    read -p "Please enter worker IP Address [ENTER] " worker;
+                    echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
+                    if [[ -f "~/.ssh/id_rsa" && -f "~/.ssh/id_rsa.pub" ]]; then
+                        echo "SSH already setup";
+                        echo "";
+                    else
+                        echo "SSH setup";
+                        echo "";
+                        ssh-keygen;
+                        echo "Generate SSH Success";
+                    fi
 
-    if [ -n "$workeraccept" ] ; then
-        if [ "$workeraccept" == "y" ] ; then
-            while [ "$workeraccept" == "y" ] ; do 
-                read -p "Please enter worker IP Address [ENTER] " worker;
-                echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
-                if [[ -f "~/.ssh/id_rsa" && -f "~/.ssh/id_rsa.pub" ]]; then
-                    echo "SSH already setup";
-                    echo "";
-                else
-                    echo "SSH setup";
-                    echo "";
-                    ssh-keygen;
-                    echo "Generate SSH Success";
-                fi
-
-                if [ -e "~/.ssh/authorized_keys" ] ; then
-                    echo "Authorization already setup";
-                    echo "";
-                else
-                    echo "Configuration authentication";
-                    echo "";
-                    touch ~/.ssh/authorized_keys;
-                    echo "Authentication Compelete";
-                    echo "";
-                fi
-                ssh-copy-id -i ~/.ssh/id_rsa.pub "$username@$ipaddr"
-                ssh-copy-id -i ~/.ssh/id_rsa.pub "$worker"
-            
-                ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
-                ssh $worker "chmod 777 express-install.sh";
-                ssh $worker "./express-install.sh" $version "http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password";
-                scp /home/$username/.ssh/authorized_keys /home/$username/.ssh/id_rsa /home/$username/.ssh/id_rsa.pub $username@$worker:/home/$username/.ssh/
-                ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
-                read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
-                workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
-            done
+                    if [ -e "~/.ssh/authorized_keys" ] ; then
+                        echo "Authorization already setup";
+                        echo "";
+                    else
+                        echo "Configuration authentication";
+                        echo "";
+                        touch ~/.ssh/authorized_keys;
+                        echo "Authentication Compelete";
+                        echo "";
+                    fi
+                    ssh-copy-id -i ~/.ssh/id_rsa.pub "$username@$ipaddr"
+                    ssh-copy-id -i ~/.ssh/id_rsa.pub "$worker"
+                
+                    ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
+                    ssh $worker "chmod 777 express-install.sh";
+                    ssh $worker "./express-install.sh" $version "http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password" "$ipaddr";
+                    scp /home/$username/.ssh/authorized_keys /home/$username/.ssh/id_rsa /home/$username/.ssh/id_rsa.pub $username@$worker:/home/$username/.ssh/
+                    ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
+                    read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
+                    workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
+                done
+            fi
         fi
-    fi
 
-    echo "Worker added";
+        echo "Worker added";
+    fi
 
     echo "";
     echo "############################################";

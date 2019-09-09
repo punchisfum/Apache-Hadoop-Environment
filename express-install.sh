@@ -168,6 +168,13 @@ if [ $(id -u) -eq 0 ]; then
         mv /tmp/$xml $HADOOP_HOME/etc/hadoop;
     done
 
+    if [ "$5" ] ; then
+        configuration=(core-site.xml hdfs-site.xml httpfs-site.xml kms-site.xml mapred-site.xml yarn-site.xml workers);
+        for xml in "${configuration[@]}" ; do
+            sed -i "s/localhost/$5/g" $HADOOP_HOME/etc/hadoop/$xml;
+        done
+    fi
+
     # Network Configuration
     
     interface=$(ip route | awk '/^default/ { print $5 }');
