@@ -310,6 +310,73 @@ if [ $(id -u) -eq 0 ]; then
 
     echo "Initialize Complete";
 
+    # Firewall
+    echo "################################################";
+    echo "##            Firewall Configuration          ##";
+    echo "################################################";
+    echo "";
+
+    echo "Documentation firewall rule for Hadoop https://hadoop.apache.org/";
+
+    if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
+
+    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ]; then
+        echo "Enable Firewall Services";
+        echo "";
+        systemctl start firewalld;
+        systemctl enable firewalld;
+
+        echo "Adding common firewall rule for hadoop security";
+        firewall=$(firewall-cmd --get-default-zone);
+        firewall-cmd --zone="$firewall" --permanent --add-port=9870/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=9000-9001/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50070/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50470/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50100/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50105/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50090-50091/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50020/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50075/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50475/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=50010/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8480/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8481/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8032/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8088/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8090/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8030-8031/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8033/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8042/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8040/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8188/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=10020/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=19888/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=2888/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=3888/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=2181/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=60010/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=60000/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=60030/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=60020/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8080/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=10000/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=9083/tcp;
+        
+        echo "Allowing DNS Services";
+        firewall-cmd --zone="$firewall" --permanent --add-service=dns;
+        echo "";
+
+        echo "Reload Firewall Services";
+        firewall-cmd --reload;
+        echo "";
+
+        echo "";
+        echo "Success Adding Firewall Rule";
+        echo "";
+    else
+        exit 1;
+    fi
+
     echo "";
     echo "############################################";
     echo "##        Adding Worker Nodes             ##";
