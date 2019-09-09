@@ -292,8 +292,10 @@ if [ $(id -u) -eq 0 ]; then
     echo "Documentation firewall rule for Hadoop https://hadoop.apache.org/";
 
     if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
+        echo "Enable Firewall Services";
+        echo "";
 
-    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ] ; then
+    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ] ; then 
         echo "Enable Firewall Services";
         echo "";
         systemctl start firewalld;
