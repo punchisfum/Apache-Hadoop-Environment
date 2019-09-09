@@ -41,7 +41,7 @@ if [ $(id -u) -eq 0 ]; then
     read -p "Update Distro (y/n) [ENTER] (y)(Recommended): " update;
     update=$(printf '%s\n' "$update" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
 
-    if [ -z "$update" == "y" ] ; then 
+    if [ "$update" == "y" ] ; then 
         if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
             apt-get -y update && apt-get -y upgrade;
         elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ] ; then
@@ -361,7 +361,7 @@ if [ $(id -u) -eq 0 ]; then
         echo "Enable Firewall Services";
         echo "";
 
-    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ]; then 
+    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ] ; then 
         echo "Enable Firewall Services";
         echo "";
         systemctl start firewalld;
