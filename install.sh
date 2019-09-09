@@ -67,7 +67,7 @@ if [ $(id -u) -eq 0 ]; then
 
     HADOOP_HOME="/usr/local/hadoop";
     
-    if [ -e "$HADOOP_HOME" ]; then
+    if [ -e "$HADOOP_HOME/etc/hadoop" ]; then
         echo "";
         echo "Hadoop is already installed on your machines.";
         echo "";
@@ -342,7 +342,7 @@ if [ $(id -u) -eq 0 ]; then
                     echo "Authentication Compelete";
                     echo "";
                 fi
-                ssh-copy-id -i ~/id_rsa.pub "$worker"
+                ssh-copy-id -i ~/.ssh/id_rsa.pub "$worker"
             
                 ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
                 ssh $worker "chmod 777 express-install.sh";

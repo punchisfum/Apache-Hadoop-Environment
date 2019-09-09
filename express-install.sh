@@ -64,7 +64,7 @@ if [ $(id -u) -eq 0 ]; then
 
     HADOOP_HOME="/usr/local/hadoop";
     
-    if [ -e "$HADOOP_HOME" ]; then
+    if [ -e "$HADOOP_HOME/bin" ]; then
         echo "";
         echo "Hadoop is already installed on your machines.";
         echo "";
