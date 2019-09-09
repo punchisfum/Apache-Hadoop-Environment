@@ -39,6 +39,8 @@ if [ $(id -u) -eq 0 ]; then
 
     # Update OS Current Distribution
     read -p "Update Distro (y/n) [ENTER] (y)(Recommended): " update;
+    update=$(printf '%s\n' "$update" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+
     if [ -z "$update" == "y" ] ; then 
         if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
             apt-get -y update && apt-get -y upgrade;
@@ -212,7 +214,31 @@ if [ $(id -u) -eq 0 ]; then
     prefix=$(ipcalc -p "$subnet" | cut -f2 -d= );
     hostname=$(echo "$HOSTNAME");
     
-    echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+    read -p "Is this the Master Node?? (y/N) [ENTER] (n): "  master;
+    master=$(printf '%s\n' "$master" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+    if [ -n "$master" ] ; then
+        if [ "$master" == "y" ] ; then
+            read -p "Do you want set this host as a worker to?? (y/N) [ENTER] (y): "  work;
+            work=$(printf '%s\n' "$work" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
+            if [ -n "$work" ] ; then
+                if [ "$work" == "y" ] ; then
+                    echo "Master & Worker only serve";
+                    echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+                else
+                    echo "Master only serve";
+                fi
+            else
+                echo "Master & Worker only serve";
+                echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+            fi
+        else
+            echo "Worker only serve";
+            echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+        fi
+    else
+        echo "Worker only serve";
+        echo -e ''$ipaddr' # '$hostname'' >> $HADOOP_HOME/etc/hadoop/workers;
+    fi
 
     chown $username:$username -R $HADOOP_HOME;
     chmod g+rwx -R $HADOOP_HOME;
