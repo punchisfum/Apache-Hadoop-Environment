@@ -434,7 +434,7 @@ if [ $(id -u) -eq 0 ]; then
             if [ "$workeraccept" == "y" ] ; then 
                 while [ "$workeraccept" == "y" ] ; do 
                     read -p "Please enter worker IP Address [ENTER] " worker;
-                    echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
+                    echo -e  ''$worker' # Worker' >> $HADOOP_HOME/etc/worker;
                     if [[ -f "~/.ssh/id_rsa" && -f "~/.ssh/id_rsa.pub" ]]; then 
                         echo "SSH already setup";
                         echo "";
