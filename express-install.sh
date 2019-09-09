@@ -293,7 +293,7 @@ if [ $(id -u) -eq 0 ]; then
 
     if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
 
-    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ]; then
+    elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ] ; then
         echo "Enable Firewall Services";
         echo "";
         systemctl start firewalld;
