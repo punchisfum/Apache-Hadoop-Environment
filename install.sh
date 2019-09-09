@@ -463,7 +463,7 @@ if [ $(id -u) -eq 0 ]; then
                     ssh $worker "./express-install.sh" $version "http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password" "$ipaddr";
                     scp /home/$username/.ssh/authorized_keys /home/$username/.ssh/id_rsa /home/$username/.ssh/id_rsa.pub $username@$worker:/home/$username/.ssh/
                     ssh $worker "chown -R $username:$username /home/$username/.ssh/*";
-                    scp $HADOOP_HOME/works/ $worker:$HADOOP_HOME;
+                    scp -r $HADOOP_HOME/works/ $worker:$HADOOP_HOME;
                     ssh $worker "chown -R $username:$username $HADOOP_HOME/works";
                     ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
                     read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
