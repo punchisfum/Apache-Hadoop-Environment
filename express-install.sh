@@ -50,7 +50,7 @@ if [ $(id -u) -eq 0 ]; then
     if [ "$os" == "ubuntu" ] || [ "$os" == "debian" ] ; then
         apt-get -y install git && apt-get -y install wget && apt-get -y install ipcalc;
     elif [ "$os" == "centos" ] || [ "$os" == "rhel" ] || [ "$os" == "fedora" ]; then
-        yum -y install git && yum -y install wget && yum -y install ipcalc;;
+        yum -y install git && yum -y install wget && yum -y install ipcalc;
     else
         exit 1;
     fi
