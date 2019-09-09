@@ -272,7 +272,7 @@ if [ $(id -u) -eq 0 ]; then
     echo "Formating NameNode";
     echo "";
     
-    sudo -H -u $username bash -c 'hadoop namenode -format';
+    sudo -i -u $username bash -c 'hadoop namenode -format';
 
     echo "Initialize Complete";
 
