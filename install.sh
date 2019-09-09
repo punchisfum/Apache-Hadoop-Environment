@@ -344,6 +344,7 @@ if [ $(id -u) -eq 0 ]; then
                     echo "Authentication Compelete";
                     echo "";
                 fi
+                ssh-copy-id -i ~/.ssh/id_rsa.pub "$username@$ipaddr"
                 ssh-copy-id -i ~/.ssh/id_rsa.pub "$worker"
             
                 ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
