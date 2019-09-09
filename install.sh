@@ -78,8 +78,9 @@ if [ $(id -u) -eq 0 ]; then
     fi
 
     if [ "$1" ] ; then
+        version=$1;
         distribution="stable";
-        packages="hadoop-$1";
+        packages="hadoop-$version";
     else
         read -p "Enter hadoop distribution version, (NULL FOR STABLE) [ENTER] : "  version;
         if [ -z "$version" ] ; then 
@@ -88,6 +89,7 @@ if [ $(id -u) -eq 0 ]; then
             version="3.2.0";
             packages="hadoop-$version";
         else
+            version=$version;
             distribution="hadoop-$version";
             packages=$distribution;
         fi
