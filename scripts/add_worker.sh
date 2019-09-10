@@ -66,17 +66,15 @@ if [ $(id -u) -eq 0 ]; then
     echo "############################################";
     echo "";
 
-    HADOOP_HOME=$(echo "$HADOOP_HOME");
-    
     read -p "Do you want to setup worker? (y/N) [ENTER] (n) " workeraccept;
     workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g');
 
-    if [ -n "$workeraccept" ] ; then
-        if [ "$workeraccept" == "y" ] ; then
+    if [ -n "$workeraccept" ] ; then 
+        if [ "$workeraccept" == "y" ] ; then 
             while [ "$workeraccept" == "y" ] ; do 
                 read -p "Please enter worker IP Address [ENTER] " worker;
-                echo -e  ''$worker' # Worker' >> $HADOOP_HOME;
-                if [[ -f "~/.ssh/id_rsa" && -f "~/.ssh/id_rsa.pub" ]]; then
+                echo -e  ''$worker' # Worker' >> $HADOOP_HOME/etc/worker;
+                if [[ -f "~/.ssh/id_rsa" && -f "~/.ssh/id_rsa.pub" ]]; then 
                     echo "SSH already setup";
                     echo "";
                 else
@@ -86,7 +84,7 @@ if [ $(id -u) -eq 0 ]; then
                     echo "Generate SSH Success";
                 fi
 
-                if [ -e "~/.ssh/authorized_keys" ] ; then
+                if [ -e "~/.ssh/authorized_keys" ] ; then 
                     echo "Authorization already setup";
                     echo "";
                 else
@@ -101,9 +99,10 @@ if [ $(id -u) -eq 0 ]; then
             
                 ssh $worker "wget https://raw.githubusercontent.com/bayudwiyansatria/Apache-Hadoop-Environment/master/express-install.sh";
                 ssh $worker "chmod 777 express-install.sh";
-                ssh $worker "./express-install.sh" $version "http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password";
+                ssh $worker "./express-install.sh" $version "http://bdev.bayudwiyansatria.com/dist/hadoop" "$username" "$password" "$ipaddr";
                 scp /home/$username/.ssh/authorized_keys /home/$username/.ssh/id_rsa /home/$username/.ssh/id_rsa.pub $username@$worker:/home/$username/.ssh/
-                ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME";
+                ssh $worker "chown -R $username:$username /home/$username/.ssh/";
+                ssh $worker "echo -e  ''$ipaddr' # Master' >> $HADOOP_HOME/etc/hadoop/workers";
                 read -p "Do you want to add more worker? (y/N) [ENTER] (n) " workeraccept;
                 workeraccept=$(printf '%s\n' "$workeraccept" | LC_ALL=C tr '[:upper:]' '[:lower:]' | sed 's/"//g'); 
             done
