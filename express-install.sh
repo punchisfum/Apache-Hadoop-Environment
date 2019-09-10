@@ -307,9 +307,9 @@ if [ $(id -u) -eq 0 ]; then
 
         echo "Adding common firewall rule for hadoop security";
         firewall=$(firewall-cmd --get-default-zone);
-        firewall-cmd --zone="$firewall" --permanent --add-port=9864/tcp;
-        firewall-cmd --zone="$firewall" --permanent --add-port=9866-9868/tcp;
-        firewall-cmd --zone="$firewall" --permanent --add-port=9870/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8485/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=9864-9869/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=9870-9871/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=9000-9001/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=50070/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=50470/tcp;
@@ -320,16 +320,18 @@ if [ $(id -u) -eq 0 ]; then
         firewall-cmd --zone="$firewall" --permanent --add-port=50075/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=50475/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=50010/tcp;
-        firewall-cmd --zone="$firewall" --permanent --add-port=8480/tcp;
-        firewall-cmd --zone="$firewall" --permanent --add-port=8481/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8480-8481/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8032/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8088/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8090/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8030-8031/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8033/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8042/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8044/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8048/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8040/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8188/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8190/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=10020/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=19888/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=2888/tcp;
@@ -340,6 +342,8 @@ if [ $(id -u) -eq 0 ]; then
         firewall-cmd --zone="$firewall" --permanent --add-port=60030/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=60020/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=8080/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8089/tcp;
+        firewall-cmd --zone="$firewall" --permanent --add-port=8091/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=10000/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=9083/tcp;
         
