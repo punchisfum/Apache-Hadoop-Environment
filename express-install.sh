@@ -303,6 +303,7 @@ if [ $(id -u) -eq 0 ]; then
 
         echo "Adding common firewall rule for hadoop security";
         firewall=$(firewall-cmd --get-default-zone);
+        firewall-cmd --zone="$firewall" --permanent --add-port=9866/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=9870/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=9000-9001/tcp;
         firewall-cmd --zone="$firewall" --permanent --add-port=50070/tcp;
