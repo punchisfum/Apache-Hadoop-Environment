@@ -279,7 +279,11 @@ if [ $(id -u) -eq 0 ]; then
     echo "Formating NameNode";
     echo "";
     
-    sudo -i -u $username bash -c 'hadoop namenode -format';
+    if [ "$5" ] ; then
+        echo "Worker waiting state";
+    else
+        sudo -i -u $username bash -c 'hadoop namenode -format';
+    fi
 
     echo "Initialize Complete";
 
