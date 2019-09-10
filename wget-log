@@ -1,8 +1,0 @@
---2019-08-28 15:02:45--  https://www-eu.apache.org/dist/hadoop/common/hadoop-3.2.0/hadoop-3.2.0.tar.gz
-Resolving www-eu.apache.org (www-eu.apache.org)... 95.216.24.32, 2a01:4f9:2a:185f::2
-Connecting to www-eu.apache.org (www-eu.apache.org)|95.216.24.32|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 345625475 (330M) [application/x-gzip]
-Saving to: ‘/tmp/hadoop-3.2.0.tar.gz’
-
-
