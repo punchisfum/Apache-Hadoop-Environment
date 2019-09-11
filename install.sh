@@ -336,19 +336,6 @@ if [ $(id -u) -eq 0 ]; then
     chown -R $username:$username "/home/$username/.ssh/";
     sudo -H -u $username bash -c 'chmod 600 /home/'$username'/.ssh/authorized_keys';
 
-    echo "";
-    echo "################################################";
-    echo "##             Hadoop Initialize              ##";
-    echo "################################################";
-    echo "";
-
-    echo "Formating NameNode";
-    echo "";
-    
-    sudo -i -u $username bash -c 'hadoop namenode -format';
-
-    echo "Initialize Complete";
-
     # Firewall
     echo "################################################";
     echo "##            Firewall Configuration          ##";
@@ -478,6 +465,23 @@ if [ $(id -u) -eq 0 ]; then
 
         echo "Worker added";
     fi
+
+    echo "";
+    echo "################################################";
+    echo "##             Hadoop Initialize              ##";
+    echo "################################################";
+    echo "";
+
+    echo "Formating NameNode";
+    echo "";
+    
+    if [ "$5" ] ; then
+        echo "Worker waiting state";
+    else
+        sudo -i -u $username bash -c 'hadoop namenode -format';
+    fi
+
+    echo "Initialize Complete";
 
     echo "";
     echo "############################################";
