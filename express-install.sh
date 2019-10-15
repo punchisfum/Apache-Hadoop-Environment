@@ -96,7 +96,7 @@ if [ $(id -u) -eq 0 ]; then
         mirror=https://www-eu.apache.org/dist/hadoop/common;
     fi
 
-    if [ "$5" ] ; then
+    if [ "$3" ] ; then
         echo "Distribution according to master";
     else
         url=$mirror/$distribution/$packages.tar.gz;
