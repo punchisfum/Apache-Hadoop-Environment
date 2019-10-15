@@ -96,19 +96,23 @@ if [ $(id -u) -eq 0 ]; then
         mirror=https://www-eu.apache.org/dist/hadoop/common;
     fi
 
-    url=$mirror/$distribution/$packages.tar.gz;
-    echo "Checking availablility hadoop $version";
-    if curl --output /dev/null --silent --head --fail "$url"; then
-        echo "Hadoop version is available: $url";
+    if [ "$5"] ; then
+        echo "Distribution according to master";
     else
-        echo "Hadoop version isn't available: $url";
-        exit 1;
+        url=$mirror/$distribution/$packages.tar.gz;
+        echo "Checking availablility hadoop $version";
+        if curl --output /dev/null --silent --head --fail "$url"; then
+            echo "Hadoop version is available: $url";
+        else
+            echo "Hadoop version isn't available: $url";
+            exit 1;
+        fi
+
+        echo "";
+        echo "Hadoop version $version install is in progress, Please keep your computer power on";
+
+        wget $mirror/$distribution/$packages.tar.gz -O /tmp/$packages.tar.gz;
     fi
-
-    echo "";
-    echo "Hadoop version $version install is in progress, Please keep your computer power on";
-
-    wget $mirror/$distribution/$packages.tar.gz -O /tmp/$packages.tar.gz;
 
     echo "";
     echo "################################################";
